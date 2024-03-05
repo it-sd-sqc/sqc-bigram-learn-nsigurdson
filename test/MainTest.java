@@ -60,5 +60,25 @@ class MainTest {
     );
   }
 
-  // TODO: Create your test(s) below. /////////////////////////////////////////
+
+    // TODO: Create your test(s) below. /////////////////////////////////////////
+    @Test
+    void getId() {
+        try (Connection testDb = DriverManager.getConnection("jdbc:sqlite::memory:")) {
+
+            // Create table for testing
+            Statement command = testDb.createStatement();
+            command.executeUpdate("CREATE TABLE IF NOT EXISTS words (id INTEGER PRIMARY KEY, string TEXT NOT NULL)");
+
+            // Execute the getId method with a word that contains whitespace
+            int result = Main.getId(testDb, "Test Word");
+
+            // The bug causes getId to return -1 in this case
+            assertEquals(-1, result, "getId should return -1 for a word with whitespace");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
